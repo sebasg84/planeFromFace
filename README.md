@@ -18,12 +18,11 @@ The second macro, allows to update the position of the plane, in case the positi
 
 ## Acknowledgments
 
-I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_Es) , and give a special thanks to Juan Carlos Ruiz and Rafael who provided ideas for the creation of the macros.
-
-Juan Carlos has a good Youtube channel with a lot of videos in Spanish explaining the use of FreeCAD : https://www.youtube.com/user/yosoyvenezolano
+I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_Es) , and give a special thanks to Rafael and Juan Carlos Ruiz who provided ideas for the creation of the macros.
 
 Rafael created a very interesting guide in Spanish of good uses of FreeCAD called ["Lo que nadie te cuenta de FreeCAD"](https://forum.freecadweb.org/viewtopic.php?t=41941)
 
+Juan Carlos has a good Youtube channel with a lot of videos in Spanish explaining the use of FreeCAD : https://www.youtube.com/user/yosoyvenezolano
 
 ******************************************************************************************************************
 
@@ -47,9 +46,8 @@ La segunda macro, permite actualizar la posición del plano, en caso de que la p
 
 ## Agradecimientos
 
-Quiero agradecer al grupo de Telegram ["FreeCAD en español"](https://t.me/FreeCAD_Es) , y dar un agradecimiento especial a Juan Carlos Ruiz y a Rafael que aportaron ideas para la creación de las macros.
-
-Juan Carlos tiene un buen canal de Youtube con un montón de vídeos en español explicando el uso de FreeCAD : https://www.youtube.com/user/yosoyvenezolano
+Quiero agradecer al grupo de Telegram ["FreeCAD en español"](https://t.me/FreeCAD_Es) , y dar un agradecimiento especial a Rafael y a Juan Carlos Ruiz que aportaron ideas para la creación de las macros.
 
 Rafael creó una guía muy interesante en español de buenos usos de FreeCAD llamada ["Lo que nadie te cuenta de FreeCAD"](https://forum.freecadweb.org/viewtopic.php?t=41941)
 
+Juan Carlos tiene un buen canal de Youtube con un montón de vídeos en español explicando el uso de FreeCAD : https://www.youtube.com/user/yosoyvenezolano
