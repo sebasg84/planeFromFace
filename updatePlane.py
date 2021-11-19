@@ -49,7 +49,10 @@ if len(sel) == 2:
             face = subobjs[0]
             if face.ShapeType == 'Face':
                 normalDatum = face.normalAt(0,0)
-                normalXY = App.Vector(0, 0, 1)
+                if normalDatum.z < 0:
+                    normalXY = App.Vector(0, 0, -1)
+                else:
+                    normalXY = App.Vector(0, 0, 1)
                 v = normalXY.cross(normalDatum)
                 epsilon = 0.0000000001
                 if v.Length > epsilon:
