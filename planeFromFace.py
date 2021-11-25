@@ -1,7 +1,7 @@
-# ***************************************************************************
+#****************************************************************************
 # *   Copyright (c) 2021 Sebastian Ernesto García <sebasg@outlook.com>      *
 # *                                                                         *
-# *   gears.py                                                            *
+# *   gears.py                                                              *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
 # *   it under the terms of the GNU Lesser General Public License (LGPL)    *
@@ -50,13 +50,18 @@ if len(sel) == 1:
                 vx = array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
                 R = eye(3) + vx + vx.dot(vx) * ((1 - c) / (s.dot(s)))
                 rotation = App.Rotation(*R.reshape(9))
-                datumPlane.AttachmentOffset = App.Placement(face.CenterOfMass,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
+                if normalDatum.z < 0:
+                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi + 180))
+                else:
+                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
             else:
-                datumPlane.AttachmentOffset = App.Placement(face.CenterOfMass,App.Rotation(App.Vector(0,0,0), 0))
+                datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(App.Vector(0,0,0), 0))
 
-            datumPlane.Support = [planeXY]
-            datumPlane.MapMode = 'FlatFace'
             datumPlane.recompute()
+            Gui.Selection.clearSelection()
+            Gui.Selection.addSelection(datumPlane)
+            App.ActiveDocument.recompute()
+
         else:
             App.Console.PrintWarning("You must choose one face \n")
     else:

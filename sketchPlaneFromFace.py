@@ -1,7 +1,7 @@
 # ***************************************************************************
 # *   Copyright (c) 2021 Sebastian Ernesto García <sebasg@outlook.com>      *
 # *                                                                         *
-# *   gears.py                                                            *
+# *   gears.py                                                              *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
 # *   it under the terms of the GNU Lesser General Public License (LGPL)    *
@@ -25,52 +25,45 @@ import FreeCAD as App
 import FreeCADGui as Gui
 
 from numpy import array, eye, pi
-
-
 sel = Gui.Selection.getSelectionEx()
 
-if len(sel) == 2:
+if len(sel) == 1:
+    subobjs = sel[0].SubObjects
+    if len(subobjs) == 1:
+        face = subobjs[0]
+        if face.ShapeType == 'Face':
+            body = sel[0].Object._Body
+            planeXY = body.Origin.OriginFeatures[3]
 
-    sel1 = sel[0]
-    sel2 = sel[1]
+            sketch = body.newObject('Sketcher::SketchObject','Sketch')
 
-    flag = False
-    if sel1.Object.TypeId == 'PartDesign::Plane':
-        datumPlane = sel1.Object
-        subobjs = sel2.SubObjects
-        flag = True
-    elif sel2.Object.TypeId == 'PartDesign::Plane':
-        datumPlane = sel2.Object
-        subobjs = sel1.SubObjects
-        flag = True
-
-    if flag == True:
-        if len(subobjs) == 1:
-            face = subobjs[0]
-            if face.ShapeType == 'Face':
-                normalDatum = face.normalAt(0,0)
-                if normalDatum.z < 0:
-                    normalXY = App.Vector(0, 0, -1)
-                else:
-                    normalXY = App.Vector(0, 0, 1)
-                v = normalXY.cross(normalDatum)
-                epsilon = 0.0000000001
-                if v.Length > epsilon:
-                    c = normalXY.dot(normalDatum)
-                    s = v.normalize()
-                    vx = array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
-                    R = eye(3) + vx + vx.dot(vx) * ((1 - c) / (s.dot(s)))
-                    rotation = App.Rotation(*R.reshape(9))
-                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
-                else:
-                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(App.Vector(0,0,0), 0))
-
-                datumPlane.recompute()
+            normalDatum = face.normalAt(0,0)
+            if normalDatum.z < 0:
+                normalXY = App.Vector(0, 0, -1)
             else:
-                App.Console.PrintWarning("You must choose one face and one datum Plane\n")
+                normalXY = App.Vector(0, 0, 1)
+            v = normalXY.cross(normalDatum)
+            epsilon = 0.0000000001
+            if v.Length > epsilon:
+                c = normalXY.dot(normalDatum)
+                s = v.normalize()
+                vx = array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
+                R = eye(3) + vx + vx.dot(vx) * ((1 - c) / (s.dot(s)))
+                rotation = App.Rotation(*R.reshape(9))
+                if normalDatum.z < 0:
+                    sketch.Placement = App.Placement(face.BoundBox.Center,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi + 180))
+                else:
+                    sketch.Placement = App.Placement(face.BoundBox.Center,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
+            else:
+                sketch.Placement = App.Placement(face.BoundBox.Center,App.Rotation(App.Vector(0,0,0), 0))
+
+            sketch.recompute()
+            App.ActiveDocument.recompute()
+            Gui.ActiveDocument.setEdit(body,0,sketch.Name+".")
+
         else:
-            App.Console.PrintWarning("You must choose one face and one datum Plane\n")
+            App.Console.PrintWarning("You must choose one face \n")
     else:
-        App.Console.PrintWarning("You must choose one face and one datum Plane\n")
+        App.Console.PrintWarning("You must choose one face \n")
 else:
-    App.Console.PrintWarning("You must choose one face and one datum Plane\n")
+    App.Console.PrintWarning("You must choose one face \n")

@@ -35,12 +35,12 @@ if len(sel) == 2:
     sel2 = sel[1]
 
     flag = False
-    if sel1.Object.TypeId == 'PartDesign::Plane':
-        datumPlane = sel1.Object
+    if sel1.Object.TypeId == 'Sketcher::SketchObject':
+        sketch = sel1.Object
         subobjs = sel2.SubObjects
         flag = True
-    elif sel2.Object.TypeId == 'PartDesign::Plane':
-        datumPlane = sel2.Object
+    elif sel2.Object.TypeId == 'Sketcher::SketchObject':
+        sketch = sel2.Object
         subobjs = sel1.SubObjects
         flag = True
 
@@ -61,11 +61,11 @@ if len(sel) == 2:
                     vx = array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
                     R = eye(3) + vx + vx.dot(vx) * ((1 - c) / (s.dot(s)))
                     rotation = App.Rotation(*R.reshape(9))
-                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
+                    sketch.Placement = App.Placement(face.BoundBox.Center,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
                 else:
-                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(App.Vector(0,0,0), 0))
+                    sketch.Placement = App.Placement(face.BoundBox.Center,App.Rotation(App.Vector(0,0,0), 0))
 
-                datumPlane.recompute()
+                sketch.recompute()
             else:
                 App.Console.PrintWarning("You must choose one face and one datum Plane\n")
         else:
