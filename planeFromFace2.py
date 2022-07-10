@@ -20,6 +20,10 @@
 # *   USA                                                                   *
 # *                                                                         *
 # ***************************************************************************
+#
+# Changes: 18Turbo (Rafael Martínez)
+#   * Change Center of Mass --> Bounding Box
+#   * Show the geometry base
 
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -51,16 +55,17 @@ if len(sel) == 1:
                 R = eye(3) + vx + vx.dot(vx) * ((1 - c) / (s.dot(s)))
                 rotation = App.Rotation(*R.reshape(9))
                 if normalDatum.z < 0:
-                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi + 180))
+                    datumPlane.Placement = App.Placement( App.Vector(face.BoundBox.XMin, face.BoundBox.YMin, face.BoundBox.ZMin) ,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi + 180))
                 else:
-                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
+                    datumPlane.Placement = App.Placement( App.Vector(face.BoundBox.XMin, face.BoundBox.YMin, face.BoundBox.ZMin) ,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
             else:
-                datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(App.Vector(0,0,0), 0))
+                datumPlane.Placement = App.Placement( App.Vector(face.BoundBox.XMin, face.BoundBox.YMin, face.BoundBox.ZMin) ,App.Rotation(App.Vector(0,0,0), 0) )
 
             datumPlane.recompute()
             sketch = body.newObject('Sketcher::SketchObject','Sketch')
             sketch.Support = (datumPlane,'')
             sketch.MapMode = 'FlatFace'
+            FreeCADGui.ActiveDocument.activeObject().HideDependent = False
             App.ActiveDocument.recompute()
             Gui.ActiveDocument.setEdit(body,0,sketch.Name+".")
             datumPlane.Visibility = False
