@@ -20,6 +20,9 @@
 # *   USA                                                                   *
 # *                                                                         *
 # ***************************************************************************
+#
+# Changes: 18Turbo (Rafael Martínez)
+#   * Change Center of Mass --> Bounding Box
 
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -61,9 +64,9 @@ if len(sel) == 2:
                     vx = array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
                     R = eye(3) + vx + vx.dot(vx) * ((1 - c) / (s.dot(s)))
                     rotation = App.Rotation(*R.reshape(9))
-                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
+                    datumPlane.Placement = App.Placement( App.Vector(face.BoundBox.XMin, face.BoundBox.YMin, face.BoundBox.ZMin) ,App.Rotation(rotation.Axis, rotation.Angle * 180 / pi))
                 else:
-                    datumPlane.Placement = App.Placement(face.CenterOfMass,App.Rotation(App.Vector(0,0,0), 0))
+                    datumPlane.Placement = App.Placement( App.Vector(face.BoundBox.XMin, face.BoundBox.YMin, face.BoundBox.ZMin) ,App.Rotation(App.Vector(0,0,0), 0) )
 
                 datumPlane.recompute()
             else:
